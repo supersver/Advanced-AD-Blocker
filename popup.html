@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        width: 300px;
+        padding: 15px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        margin: 0;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .subtitle {
+        font-size: 12px;
+        opacity: 0.8;
+      }
+
+      .stats {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+      }
+
+      .blocked-count {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .blocked-text {
+        font-size: 12px;
+        opacity: 0.8;
+      }
+
+      .controls {
+        margin-bottom: 15px;
+      }
+
+      .toggle-btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 10px;
+      }
+
+      .toggle-btn.enabled {
+        background: #4caf50;
+        color: white;
+      }
+
+      .toggle-btn.disabled {
+        background: #f44336;
+        color: white;
+      }
+
+      .toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .reset-btn {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        background: transparent;
+        color: white;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .reset-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .features {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 11px;
+        line-height: 1.4;
+      }
+
+      .features ul {
+        margin: 5px 0;
+        padding-left: 15px;
+      }
+
+      .features li {
+        margin: 3px 0;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .status-enabled {
+        background: #4caf50;
+      }
+
+      .status-disabled {
+        background: #f44336;
+      }
+
+      .footer {
+        margin-top: 12px;
+        text-align: right;
+        font-size: 10px;
+        opacity: 0.85;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 3px 6px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        letter-spacing: 0.2px;
+      }
+
+      .tag a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .tag:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo">🛡️ Ad Blocker</div>
+      <div class="subtitle">Advanced Protection</div>
+    </div>
+
+    <div class="stats">
+      <div class="blocked-count" id="blockedCount" aria-live="polite">0</div>
+      <div class="blocked-text">ads blocked</div>
+    </div>
+
+    <div class="controls">
+      <button class="toggle-btn enabled" id="toggleBtn" aria-pressed="true">
+        <span
+          class="status-indicator status-enabled"
+          id="statusIndicator"
+        ></span>
+        <span id="statusText">Protection Enabled</span>
+      </button>
+      <button class="reset-btn" id="resetBtn">Reset Counter</button>
+    </div>
+
+    <div class="features">
+      <strong>🚀 Features:</strong>
+      <ul>
+        <li>Blocks display ads & pop-ups</li>
+        <li>Removes tracking scripts</li>
+        <li>Hides cookie banners</li>
+        <li>Bypasses anti-adblock</li>
+        <li>Real-time protection</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <span class="tag">By @supersver</span>
+    </div>
+
+    <script src="popup.js" defer></script>
+  </body>
+</html>
