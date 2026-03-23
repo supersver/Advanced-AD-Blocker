@@ -1,0 +1,9 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield background -->
+  <path d="M64 8C64 8 28 24 28 56C28 88 64 112 64 112C64 112 100 88 100 56C100 24 64 8 64 8Z" fill="#007AF5" stroke="#005AC4" stroke-width="2"/>
+  
+  <!-- Checkmark inside shield -->
+  <g transform="translate(30, 35)">
+    <path d="M8 20L18 32L42 8" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

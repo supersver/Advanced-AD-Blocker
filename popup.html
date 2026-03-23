@@ -1,195 +1,352 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
     <style>
-      body {
-        width: 300px;
-        padding: 15px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+      * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 350px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", sans-serif;
+        background: #f5f5f7;
+        color: #1d1d1f;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        max-height: 100vh;
+      }
+
+      .container {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
       }
 
       .header {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
 
       .logo {
-        font-size: 24px;
+        font-size: 32px;
         font-weight: bold;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+        animation: slideDown 0.5s ease-out;
+        color: #1d1d1f;
       }
 
       .subtitle {
-        font-size: 12px;
-        opacity: 0.8;
+        font-size: 13px;
+        opacity: 0.6;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        color: #666;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
 
       .stats {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 15px;
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
         text-align: center;
-        backdrop-filter: blur(10px);
+        border: 1px solid #e5e5e7;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
+      }
+
+      .stats:hover {
+        border-color: #d0d0d7;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .blocked-label {
+        font-size: 12px;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #666;
       }
 
       .blocked-count {
-        font-size: 28px;
-        font-weight: bold;
-        margin-bottom: 5px;
+        font-size: 48px;
+        font-weight: 800;
+        color: #007af5;
+        margin-bottom: 4px;
+        font-variant-numeric: tabular-nums;
+        animation: fadeIn 0.6s ease-out;
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .blocked-count.updating {
+        animation: pulse 0.4s ease-out;
       }
 
       .blocked-text {
-        font-size: 12px;
-        opacity: 0.8;
+        font-size: 11px;
+        opacity: 0.6;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
       }
 
       .controls {
-        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       }
 
       .toggle-btn {
         width: 100%;
-        padding: 12px;
+        padding: 14px 16px;
         border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: bold;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
 
       .toggle-btn.enabled {
-        background: #4caf50;
+        background: #34c759;
         color: white;
       }
 
       .toggle-btn.disabled {
-        background: #f44336;
+        background: #ff3b30;
         color: white;
       }
 
       .toggle-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .toggle-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       .reset-btn {
         width: 100%;
-        padding: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 6px;
-        background: transparent;
-        color: white;
+        padding: 10px 16px;
+        border: 1.5px solid #d0d0d7;
+        border-radius: 8px;
+        background: white;
+        color: #007af5;
         font-size: 12px;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       .reset-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: #f5f5f7;
+        border-color: #007af5;
+        transform: translateY(-1px);
+      }
+
+      .reset-btn:active {
+        transform: translateY(0);
       }
 
       .features {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 10px;
+        background: white;
+        border-radius: 10px;
+        padding: 12px 14px;
         font-size: 11px;
-        line-height: 1.4;
+        line-height: 1.5;
+        border: 1px solid #e5e5e7;
+        animation: fadeIn 0.8s ease-out 0.2s both;
+        color: #1d1d1f;
+      }
+
+      .features strong {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #1d1d1f;
       }
 
       .features ul {
-        margin: 5px 0;
-        padding-left: 15px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
       }
 
       .features li {
-        margin: 3px 0;
+        margin: 5px 0;
+        padding-left: 16px;
+        position: relative;
+        color: #666;
+      }
+
+      .features li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #34c759;
+        font-weight: bold;
       }
 
       .status-indicator {
         display: inline-block;
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         margin-right: 8px;
+        animation: pulse 2s infinite;
       }
 
       .status-enabled {
-        background: #4caf50;
+        background: #34c759;
+        box-shadow: 0 0 8px rgba(52, 199, 89, 0.5);
       }
 
       .status-disabled {
-        background: #f44336;
+        background: #ff3b30;
+        box-shadow: 0 0 8px rgba(255, 59, 48, 0.5);
       }
 
       .footer {
-        margin-top: 12px;
-        text-align: right;
+        margin-top: 8px;
+        text-align: center;
         font-size: 10px;
-        opacity: 0.85;
+        opacity: 0.7;
+        animation: fadeIn 1s ease-out 0.4s both;
+        color: #666;
       }
 
       .tag {
         display: inline-block;
-        padding: 3px 6px;
+        padding: 4px 8px;
         border-radius: 6px;
-        background: rgba(255, 255, 255, 0.12);
-        color: #fff;
-        letter-spacing: 0.2px;
+        background: #f5f5f7;
+        color: #1d1d1f;
+        letter-spacing: 0.3px;
+        transition: all 0.3s ease;
+        border: 1px solid #e5e5e7;
       }
 
       .tag a {
-        color: inherit;
+        color: #007af5;
         text-decoration: none;
+        font-weight: 600;
       }
 
       .tag:hover {
-        background: rgba(255, 255, 255, 0.18);
+        background: white;
+        border-color: #d0d0d7;
+        transform: translateY(-1px);
+      }
+
+      .tag a:hover {
+        color: #005ac4;
+      }
+
+      @keyframes glow {
+        0%,
+        100% {
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+        }
       }
     </style>
   </head>
   <body>
-    <div class="header">
-      <div class="logo">🛡️ Ad Blocker</div>
-      <div class="subtitle">Advanced Protection</div>
-    </div>
+    <div class="container">
+      <div class="header">
+        <div class="logo">🛡️ Ad Blocker</div>
+        <div class="subtitle">Advanced Protection</div>
+      </div>
 
-    <div class="stats">
-      <div class="blocked-count" id="blockedCount" aria-live="polite">0</div>
-      <div class="blocked-text">ads blocked</div>
-    </div>
+      <div class="stats">
+        <div class="blocked-label">Blocked Today</div>
+        <div class="blocked-count" id="blockedCount" aria-live="polite">0</div>
+        <div class="blocked-text">ads & trackers blocked</div>
+      </div>
 
-    <div class="controls">
-      <button class="toggle-btn enabled" id="toggleBtn" aria-pressed="true">
-        <span
-          class="status-indicator status-enabled"
-          id="statusIndicator"
-        ></span>
-        <span id="statusText">Protection Enabled</span>
-      </button>
-      <button class="reset-btn" id="resetBtn">Reset Counter</button>
-    </div>
+      <div class="controls">
+        <button class="toggle-btn enabled" id="toggleBtn" aria-pressed="true">
+          <span
+            class="status-indicator status-enabled"
+            id="statusIndicator"
+          ></span>
+          <span id="statusText">Protection Enabled</span>
+        </button>
+        <button class="reset-btn" id="resetBtn">Reset Counter</button>
+      </div>
 
-    <div class="features">
-      <strong>🚀 Features:</strong>
-      <ul>
-        <li>Blocks display ads & pop-ups</li>
-        <li>Removes tracking scripts</li>
-        <li>Hides cookie banners</li>
-        <li>Bypasses anti-adblock</li>
-        <li>Real-time protection</li>
-      </ul>
-    </div>
+      <div class="features">
+        <strong>🚀 Features:</strong>
+        <ul>
+          <li>Blocks display ads & pop-ups</li>
+          <li>Removes tracking scripts</li>
+          <li>Hides cookie banners</li>
+          <li>Bypasses anti-adblock</li>
+          <li>Real-time protection</li>
+        </ul>
+      </div>
 
-    <div class="footer">
-      <span class="tag">By @supersver</span>
+      <div class="footer">
+        <span class="tag"
+          >By
+          <a href="https://github.com/supersver" target="_blank"
+            >@supersver</a
+          ></span
+        >
+      </div>
     </div>
 
     <script src="popup.js" defer></script>

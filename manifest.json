@@ -23,7 +23,8 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Advanced Ad Blocker"
+    "default_title": "Advanced Ad Blocker",
+    "default_icon": "icons/icon.svg"
   },
   "declarative_net_request": {
     "rule_resources": [

@@ -2,60 +2,71 @@
 (function () {
   "use strict";
 
-  // Common ad selectors
-  const adSelectors = [
-    // Generic ad containers
-    ".ad",
-    ".ads",
-    '[class*="advertisement"]',
-    '[id*="advertisement"]',
-    ".banner",
-    ".popup",
-    ".overlay",
-    ".modal-ad",
-    ".sponsored",
-    ".promo",
-    ".promotion",
+  const currentDomain = window.location.hostname;
+  const isYouTube =
+    currentDomain.includes("youtube.com") || currentDomain.includes("youtu.be");
 
-    // Google Ads
-    ".adsbygoogle",
-    "ins.adsbygoogle",
-    "[data-ad-client]",
-    'iframe[src*="doubleclick"]',
-    'iframe[src*="googlesyndication"]',
+  // Only block these selectors on non-YouTube sites
+  // YouTube is handled separately by rules.json (declarativeNetRequest)
+  const adSelectors = !isYouTube
+    ? [
+        // Generic ad containers - but NOT on YouTube
+        ".ad",
+        ".ads",
+        '[class*="advertisement"]',
+        '[id*="advertisement"]',
+        ".popup",
+        ".overlay",
+        ".modal-ad",
+        ".sponsored",
+        ".promo",
+        ".promotion",
 
-    // Facebook ads
-    '[data-testid="sponsored_message"]',
-    '[aria-label*="Sponsored"]',
+        // Google Ads
+        ".adsbygoogle",
+        "ins.adsbygoogle",
+        "[data-ad-client]",
+        'iframe[src*="doubleclick"]',
+        'iframe[src*="googlesyndication"]',
 
-    // Common ad networks
-    'iframe[src*="amazon-adsystem"]',
-    'iframe[src*="adsystem.amazon"]',
-    'iframe[src*="outbrain"]',
-    'iframe[src*="taboola"]',
-    'iframe[src*="revcontent"]',
-    'iframe[src*="mgid.com"]',
+        // Facebook ads
+        '[data-testid="sponsored_message"]',
 
-    // Video ads
-    ".video-ads",
-    ".preroll",
-    ".midroll",
-    ".postroll",
+        // Common ad networks
+        'iframe[src*="amazon-adsystem"]',
+        'iframe[src*="adsystem.amazon"]',
+        'iframe[src*="outbrain"]',
+        'iframe[src*="taboola"]',
+        'iframe[src*="revcontent"]',
+        'iframe[src*="mgid.com"]',
 
-    // Social media ads
-    '[data-testid*="ad"]',
-    '[aria-label*="ad"]',
+        // Video ads
+        ".video-ads",
+        ".preroll",
+        ".midroll",
+        ".postroll",
 
-    // Generic patterns
-    '[class*="ad-"]',
-    '[id*="ad-"]',
-    '[class*="ads-"]',
-    '[id*="ads-"]',
-    '[class*="banner"]',
-    '[id*="banner"]',
-    '[class*="sponsor"]',
-    '[id*="sponsor"]',
-  ];
+        // Social media ads - more specific
+        '[data-testid*="ad_"]',
+
+        // Generic patterns - more specific
+        '[class*="ad-block"]',
+        '[class*="advert-"]',
+        '[class*="ads-main"]',
+        '[id*="ad-"]',
+        '[id*="ads-"]',
+        '[class*="sponsor-"]',
+        '[id*="sponsor-"]',
+      ]
+    : [
+        // For YouTube: Only block specific ad networks and tracking
+        ".adsbygoogle",
+        "ins.adsbygoogle",
+        "[data-ad-client]",
+        'iframe[src*="doubleclick"]',
+        'iframe[src*="googlesyndication"]',
+        'iframe[src*="google-analytics"]',
+      ];
 
   let observer = null;
   let intervalId = null;
@@ -98,8 +109,10 @@
     });
   }
 
-  // Hide cookie banners and GDPR notices
+  // Hide cookie banners and GDPR notices - Skip for YouTube
   function hideCookieBanners() {
+    if (isYouTube) return; // Don't hide cookie banners on YouTube to avoid breaking UI
+
     const cookieSelectors = [
       '[class*="cookie"]',
       '[id*="cookie"]',
@@ -198,25 +211,54 @@
 
     // Inject CSS to hide common ad patterns
     styleEl = document.createElement("style");
-    styleEl.textContent = `
-      /* Hide common ad patterns */
-      [class*="ad-"], [id*="ad-"],
-      [class*="ads-"], [id*="ads-"],
-      [class*="banner"], [id*="banner"],
-      [class*="sponsor"], [id*="sponsor"],
-      .adsbygoogle, ins.adsbygoogle,
-      iframe[src*="doubleclick"],
-      iframe[src*="googlesyndication"],
-      iframe[src*="amazon-adsystem"],
-      iframe[src*="outbrain"],
-      iframe[src*="taboola"] {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        height: 0 !important;
-        width: 0 !important;
-      }
-    `;
+
+    if (isYouTube) {
+      // YouTube-specific: Only hide ad network iframes and tracking
+      styleEl.textContent = `
+        /* YouTube-safe CSS: Only hide actual ad networks */
+        .adsbygoogle,
+        ins.adsbygoogle,
+        [data-ad-client],
+        iframe[src*="doubleclick"],
+        iframe[src*="googlesyndication"],
+        iframe[src*="google-analytics"] {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          height: 0 !important;
+          width: 0 !important;
+        }
+      `;
+    } else {
+      // Non-YouTube sites: Broader ad blocking
+      styleEl.textContent = `
+        /* Hide common ad patterns */
+        [class*="ad-block"], [id*="ad-block"],
+        [class*="advert-"], [id*="advert-"],
+        [class*="ads-main"], [id*="ads-main"],
+        [class*="ad-"], [id*="ad-"],
+        [class*="ads-"], [id*="ads-"],
+        [class*="sponsor-"], [id*="sponsor-"],
+        .adsbygoogle, ins.adsbygoogle,
+        [data-ad-client],
+        iframe[src*="doubleclick"],
+        iframe[src*="googlesyndication"],
+        iframe[src*="amazon-adsystem"],
+        iframe[src*="outbrain"],
+        iframe[src*="taboola"],
+        iframe[src*="revcontent"],
+        .video-ads,
+        .preroll,
+        .midroll,
+        .postroll {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          height: 0 !important;
+          width: 0 !important;
+        }
+      `;
+    }
     (document.head || document.documentElement).appendChild(styleEl);
   }
 
